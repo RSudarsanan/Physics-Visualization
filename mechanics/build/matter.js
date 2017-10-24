@@ -3560,7 +3560,7 @@ var Common = _dereq_('../core/Common');
         var render = {
             visible: true,
             lineWidth: 2,
-            strokeStyle: '#ffffff',
+            strokeStyle: '#ff0000',
             type: 'line',
             anchors: true
         };
@@ -8321,11 +8321,11 @@ var Mouse = _dereq_('../core/Mouse');
             mouse: null,
             frameRequestId: null,
             options: {
-                width: 800,
+                width: 400,
                 height: 600,
                 pixelRatio: 1,
-                background: '#18181d',
-                wireframeBackground: '#0f0f13',
+                background: '#0000ff',
+                wireframeBackground: '#0000ff',
                 hasBounds: !!options.bounds,
                 enabled: true,
                 wireframes: true,
