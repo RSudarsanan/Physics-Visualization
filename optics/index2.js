@@ -18,6 +18,7 @@ var Basic_Constructs = {
     }
   },
   //// basic vector-algebra functions
+  
   dot: function(point1, point2) {
     return point1.x * point2.x + point1.y * point2.y;
   },
@@ -26,6 +27,7 @@ var Basic_Constructs = {
     return point1.x * point2.y - point1.y * point2.x;
   },
   // basic functions for intersections between various connstructs
+  
   intersection: function(obj1, obj2) {
     // line & line
     if (obj1.type == 2 && obj2.type == 2) {
@@ -40,7 +42,8 @@ var Basic_Constructs = {
       return this.intersection_line_circle(obj2, obj1);
     }
   },
-  // intersection of line with line
+
+	// intersection of line with line
   intersection_line_line: function(l1, l2) {
     var A = l1.point2.x * l1.point1.y - l1.point1.x * l1.point2.y;
     var B = l2.point2.x * l2.point1.y - l2.point1.x * l2.point2.y;
@@ -50,7 +53,8 @@ var Basic_Constructs = {
     var yb = l2.point2.y - l2.point1.y;
     return Basic_Constructs.point((A * xb - B * xa) / (xa * yb - xb * ya), (A * yb - B * ya) / (xa * yb - xb * ya));
   },
-  // intersection of line with circle
+
+	// intersection of line with circle
   intersection_line_circle: function(l1, c1) {
     var xa = l1.point2.x - l1.point1.x;
     var ya = l1.point2.y - l1.point1.y;
@@ -91,13 +95,15 @@ var Basic_Constructs = {
     var dy = l1.point2.y - l1.point1.y;
     return Basic_Constructs.line(point1, Basic_Constructs.point(point1.x + dx, point1.y + dy));
   },
-  // return midpoint
+  
+	// return midpoint
   midpoint: function(l1) {
     var nx = (l1.point1.x + l1.point2.x) * 0.5;
     var ny = (l1.point1.y + l1.point2.y) * 0.5;
     return Basic_Constructs.point(nx, ny);
   },
-  // returns perpendicular bisector line
+  
+	// returns perpendicular bisector line
   perpendicular_bisector: function(l1) {
     return Basic_Constructs.line(
         Basic_Constructs.point(
@@ -1027,6 +1033,7 @@ refract: function(ray, rayIndex, s_point, normal, n1){
     }
 
     if (lens.p > 0){
+    
       ray.point2 = Basic_Constructs.intersection_line_line(twoF_line_far, Basic_Constructs.line(mid_point, Basic_Constructs.intersection_line_line(twoF_line_near, ray)));
       ray.point1 = shootPoint;
     }
@@ -1038,17 +1045,24 @@ refract: function(ray, rayIndex, s_point, normal, n1){
   };
 ////////////////////////////////////////////////////////////////////// MIRROR ////////////////////////////////////////////////////////////////////////////////////
   
+
+  /*!
+   * adding mirror object in Constructs
+   * 
+   */
   Constructs['mirror'] = {
 
-  create: function(mouse) {
+  create: function(mouse) {  // return an object of type mirror with proper members
     return {type: 'mirror', point1: mouse, point2: mouse};
   },
   c_mousedown: Constructs['lineobj'].c_mousedown,
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
+ // clicked: Constructs['lineobj'].clicked,
+ // dragging: Constructs['lineobj'].dragging,
   rayIntersection: Constructs['lineobj'].rayIntersection,
 
-  draw: function(obj) {
+  draw: function(obj) {  // draws the mirror on canvas from point1 to point2
     ctx.strokeStyle = 'rgb(168,168,168)';
     ctx.beginPath();
     ctx.moveTo(obj.point1.x, obj.point1.y);
@@ -1056,12 +1070,12 @@ refract: function(ray, rayIndex, s_point, normal, n1){
     ctx.stroke();
   },
 
-  shot: function(mirror, ray, rayIndex, pointOnMirror) {
+  shot: function(mirror, ray, rayIndex, pointOnMirror) { // redefines the ray after it get reflects from the mirror
     var rx = ray.point1.x - pointOnMirror.x;
     var ry = ray.point1.y - pointOnMirror.y;
     var mx = mirror.point2.x - mirror.point1.x;
     var my = mirror.point2.y - mirror.point1.y;
-    ray.point1 = pointOnMirror;
+    ray.point1 = pointOnMirror; // changed the points to make the reflected ray 
     // JEE trigno! hopefully this is correct will see.
     ray.point2 = Basic_Constructs.point(pointOnMirror.x + rx * (my * my - mx * mx) - 2 * ry * mx * my, pointOnMirror.y + ry * (mx * mx - my * my) - 2 * rx * mx * my);
   }
@@ -1069,78 +1083,81 @@ refract: function(ray, rayIndex, s_point, normal, n1){
 
 ////////////////////////////////////////////////////////////////////  CONVEX CONCAVE MIRRORS //////////////////////////////////////////////////////////////////////
 
-Constructs['idealmirror'] = {
+  // as ideal mirror have small aperture it will be draw as straight line approximately 
+  Constructs['idealmirror'] = { // adding the object idealmirror to Constructs
 
   p_name: 'Focal length', // focal length property
   p_min: -1000,
   p_max: 1000,
   p_step: 1,
 
-  create: function(mouse) {
+  create: function(mouse) { // returns an object of type idealmirror , it has information of the co-ordinates of the ends of the miror
     return {type: 'idealmirror', point1: mouse, point2:mouse, p: 100};
   },
-
+  // data members which helps draw the mirror while dragging the mouse 
   c_mousedown: Constructs['lineobj'].c_mousedown,
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
   rayIntersection: Constructs['lineobj'].rayIntersection,
 
-  draw: function(obj) {
-    var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
-    var par_x = (obj.point2.x - obj.point1.x) / len;
-    var par_y = (obj.point2.y - obj.point1.y) / len;
-    var per_x = par_y;
-    var per_y = -par_x;
+  // to draw the idealmirror on the canvas 
+  draw: function(obj) { 
+  var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
+  var par_x = (obj.point2.x - obj.point1.x) / len;
+  var par_y = (obj.point2.y - obj.point1.y) / len;
+  var per_x = par_y;
+  var per_y = -par_x;
 
-    var arrow_size_per = 5;
-    var arrow_size_par = 5;
-    var center_size = 1;
-    ctx.strokeStyle = 'rgb(256,0,0)';
-    ctx.globalAlpha = 1;
-    ctx.lineWidth = 1;
+  var arrow_size_per = 5;
+  var arrow_size_par = 5;
+  var center_size = 1;
+  ctx.strokeStyle = 'rgb(256,0,0)';
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(obj.point1.x, obj.point1.y);
+  ctx.lineTo(obj.point2.x, obj.point2.y);
+  ctx.stroke();
+  ctx.lineWidth = 1;
+  
+  var center = Basic_Constructs.midpoint(obj);
+  ctx.strokeStyle = 'rgb(255,255,255)';
+  ctx.beginPath();
+  ctx.moveTo(center.x - per_x * center_size, center.y - per_y * center_size);
+  ctx.lineTo(center.x + per_x * center_size, center.y + per_y * center_size);
+  ctx.stroke();
+  ctx.fillStyle = 'rgb(256,0,0)';
+
+  if (obj.p < 0){ // different cases of concave and convex
     ctx.beginPath();
-    ctx.moveTo(obj.point1.x, obj.point1.y);
-    ctx.lineTo(obj.point2.x, obj.point2.y);
-    ctx.stroke();
-    ctx.lineWidth = 1;
-    
-    var center = Basic_Constructs.midpoint(obj);
-    ctx.strokeStyle = 'rgb(255,255,255)';
+    ctx.moveTo(obj.point1.x - par_x * arrow_size_par, obj.point1.y - par_y * arrow_size_par);
+    ctx.lineTo(obj.point1.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par + per_y * arrow_size_per);
+    ctx.lineTo(obj.point1.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par - per_y * arrow_size_per);
+    ctx.fill();
+
     ctx.beginPath();
-    ctx.moveTo(center.x - per_x * center_size, center.y - per_y * center_size);
-    ctx.lineTo(center.x + per_x * center_size, center.y + per_y * center_size);
-    ctx.stroke();
-    ctx.fillStyle = 'rgb(256,0,0)';
+    ctx.moveTo(obj.point2.x + par_x * arrow_size_par, obj.point2.y + par_y * arrow_size_par);
+    ctx.lineTo(obj.point2.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par + per_y * arrow_size_per);
+    ctx.lineTo(obj.point2.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par - per_y * arrow_size_per);
+    ctx.fill();
+  }
+  if (obj.p > 0){
+    ctx.beginPath();
+    ctx.moveTo(obj.point1.x + par_x * arrow_size_par, obj.point1.y + par_y * arrow_size_par);
+    ctx.lineTo(obj.point1.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par + per_y * arrow_size_per);
+    ctx.lineTo(obj.point1.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par - per_y * arrow_size_per);
+    ctx.fill();
 
-    if (obj.p < 0){ // different cases of concave and convex
-      ctx.beginPath();
-      ctx.moveTo(obj.point1.x - par_x * arrow_size_par, obj.point1.y - par_y * arrow_size_par);
-      ctx.lineTo(obj.point1.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par + per_y * arrow_size_per);
-      ctx.lineTo(obj.point1.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par - per_y * arrow_size_per);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(obj.point2.x + par_x * arrow_size_par, obj.point2.y + par_y * arrow_size_par);
-      ctx.lineTo(obj.point2.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par + per_y * arrow_size_per);
-      ctx.lineTo(obj.point2.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par - per_y * arrow_size_per);
-      ctx.fill();
-    }
-    if (obj.p > 0){
-      ctx.beginPath();
-      ctx.moveTo(obj.point1.x + par_x * arrow_size_par, obj.point1.y + par_y * arrow_size_par);
-      ctx.lineTo(obj.point1.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par + per_y * arrow_size_per);
-      ctx.lineTo(obj.point1.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par - per_y * arrow_size_per);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(obj.point2.x - par_x * arrow_size_par, obj.point2.y - par_y * arrow_size_par);
-      ctx.lineTo(obj.point2.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par + per_y * arrow_size_per);
-      ctx.lineTo(obj.point2.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par - per_y * arrow_size_per);
-      ctx.fill();
-    }
+    ctx.beginPath();
+    ctx.moveTo(obj.point2.x - par_x * arrow_size_par, obj.point2.y - par_y * arrow_size_par);
+    ctx.lineTo(obj.point2.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par + per_y * arrow_size_per);
+    ctx.lineTo(obj.point2.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par - per_y * arrow_size_per);
+    ctx.fill();
+  }
 
   },
-
+  // as concave and convex mirror can be seen as combinaton of a respective lens and plane mirror , so the reflection of a ray 
+  // through it is equivalent to passing it through lens first and then reflecting through mirror
   shot: function(obj, ray, rayIndex, shootPoint) {
     Constructs['lens'].shot(obj, ray, rayIndex, Basic_Constructs.point(shootPoint.x, shootPoint.y));
     ray.point1.x = 2 * ray.point1.x - ray.point2.x;
@@ -1148,17 +1165,20 @@ Constructs['idealmirror'] = {
 
     Constructs['mirror'].shot(obj, ray, rayIndex, shootPoint);
   }
-};
+  };
 
 ///////////////////////////////////////////////////////////////////"""  ARC - MIRROR"""  ////////////////////////////////////////////////////////////////
 
-Constructs['arcmirror'] = {
+// creating an object of type arcmirror which is nothing but a circular mirror
 
+Constructs['arcmirror'] = {
+  // returns the object of type arcmirror but only first initialised
   create: function(mouse) {
     return {type: 'arcmirror', point1: mouse};
   },
 
   c_mousedown: function(obj, mouse) {
+    //checking for what is this mousedow for , ie for point3 or point2
     if (!obj.point2 && !obj.p3){
       draw();
       obj.point2 = mouse;
@@ -1171,6 +1191,7 @@ Constructs['arcmirror'] = {
       return;
     }
   },
+  // as mouse moves this draws the mirror with that curvature after ensuring whether third point is given or not 
 
   c_mousemove: function(obj, mouse){
     if (!obj.p3 && !mouseOnPoint_construct(mouse, obj.point1)){
@@ -1186,11 +1207,13 @@ Constructs['arcmirror'] = {
     }
   },
 
+// if mouse is up after giving third point , then sets the third point as it is 
   c_mouseup: function(obj, mouse){
     if (obj.point2 && !obj.p3 && !mouseOnPoint_construct(mouse, obj.point1)){
       obj.p3 = mouse;
       return;
     }
+    // if third point has been selected , then stop drawing after the final draw 
     if (obj.p3 && !mouseOnPoint_construct(mouse, obj.point2)){
       obj.p3 = mouse;
       draw();
@@ -1198,11 +1221,13 @@ Constructs['arcmirror'] = {
       return;
     }
   },
-
+// draw function to draw the arcmirror on the canvas 
   draw: function(obj) {
     ctx.fillStyle = 'rgb(255,0,255)';
+    // if point 2 and point 3 both are defined
     if (obj.p3 && obj.point2){
       var center = Basic_Constructs.intersection_line_line(Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point1, obj.p3)), Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point2, obj.p3)));
+      // if center of the circular mirror is at infinity , then it is basically a plane mirror 
       if (!isFinite(center.x) || !isFinite(center.y)){
         //Arc collinear, as a processing line
         ctx.strokeStyle = 'rgb(168,168,168)';
@@ -1215,6 +1240,7 @@ Constructs['arcmirror'] = {
         ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 3, 3);
         ctx.fillRect(obj.point2.x - 2, obj.point2.y - 2, 3, 3);
       }
+      // else it is a circular mirror and the function draws the same using canvas functions
       else{
         var r = Basic_Constructs.length(center, obj.p3);
         var a1 = Math.atan2(obj.point1.y - center.y, obj.point1.x - center.x);
@@ -1230,17 +1256,19 @@ Constructs['arcmirror'] = {
         ctx.fillRect(obj.point2.x - 2, obj.point2.y - 2, 3, 3);
       }
     }
+    // if point3 is not defined and point2 is defined , then set the color of two points to distinguish form the line
     else if (obj.point2){
       ctx.fillStyle = 'rgb(128,128,128)';
       ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 3, 3);
       ctx.fillRect(obj.point2.x - 2, obj.point2.y - 2, 3, 3);
     }
+    // else just indicate the point1 with distinguishable color 
     else{
       ctx.fillStyle = 'rgb(128,128,128)';
       ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 3, 3);
     }
   },
-
+  // it is to intersect the ray through the mirror
   rayIntersection: function(obj, ray) {
     if (!obj.p3) {return;}
     var center = Basic_Constructs.intersection_line_line(Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point1, obj.p3)), Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point2, obj.p3)));
@@ -1259,7 +1287,8 @@ Constructs['arcmirror'] = {
       if (rp_exist[2] && ((!rp_exist[1]) || rp_lensq[2] < rp_lensq[1])) {return rp_temp[2];}
     }
   },
-
+  // reflects the ray after colliding at the mirror  
+  // to accomplish so , checks whether mirror is plane or circular and does accordingaly 
   shot: function(obj, ray, rayIndex, rp) {
     var center = Basic_Constructs.intersection_line_line(Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point1, obj.p3)), Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point2, obj.p3)));
     if (!isFinite(center.x) || !isFinite(center.y)){
@@ -1282,6 +1311,7 @@ Constructs['arcmirror'] = {
 
 Constructs['ruler'] = {
   // function to create a functional object of ruler
+
   create: function(mouse) {
     return {type: 'ruler', point1: mouse, point2: mouse};
   },
@@ -1294,10 +1324,10 @@ Constructs['ruler'] = {
   dragging: Constructs['lineobj'].dragging,
   // drws ruler 
   draw: function(obj, aboveLight) {
-  //var ctx = canvas.getContext('2d');
-    if (aboveLight)return;
-    ctx.globalCompositeOperation = 'lighter';
-    var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
+  //var ctx = canvas.getcontext('2d');
+    if (abovelight)return;
+    ctx.globalcompositeoperation = 'lighter';
+    var len = math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
     var par_x = (obj.point2.x - obj.point1.x) / len;
     var par_y = (obj.point2.y - obj.point1.y) / len;
     var per_x = par_y;
@@ -1440,7 +1470,7 @@ Constructs['protractor'] = {
 };
 
 
-///////////////////////////////////////////////////////////////////////////////  SHOW-TIME  ////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////// SHOW-TIME /////////////////////////////////////////////////////////////////////////
 
 var canvas;
 var ctx;
@@ -1618,6 +1648,8 @@ function shootWaitingRays(){
   var observed_intersection;
   var rpd;
   var leftRayCount = waitingRays.length; // this is the number of rays to be drwan
+  var leftRayCount = waitingRays.length;
+  var surfaceMerging_objs = [];
 
   while (leftRayCount != 0){
     leftRayCount = 0; //Restart to calculate the amount of remaining light
@@ -1629,15 +1661,14 @@ function shootWaitingRays(){
         //If waitingRays[j] exists
         //Begin to shoot waitingRays[j] (the last light of the waiting area)
         //Determine which object will hit the light after it is shot
-        //O(nm)
-        //The decrease in search of every "intersect with this light objects, looking for" [light] from the intersection of the object and the light [head] recent articles"
-        s_obj = null; //"So far, the object of inspection [the intersection with the light] from the [light of the head] the nearest object
+        //the decrease in search of every "intersect with this light objects, looking for" [light] from the intersection of the object and the light [head] recent articles"
+        s_obj = null; //"so far, the object of inspection [the intersection with the light] from the [light of the head] the nearest object
         s_obj_index = -1;
-        s_point = null;  //The intersection of s_obj and light 
-        s_lensq = Infinity; //Set the distance between "s_obj and the intersection of light" and "the head of the ray" to infinity (since no object has been checked at all, and now is looking for the minimum) 
+        s_point = null;  //the intersection of s_obj and light 
+        s_lensq = infinity; //set the distance between "s_obj and the intersection of light" and "the head of the ray" to infinity (since no object has been checked at all, and now is looking for the minimum) 
         for (var i = 0; i < objs.length; i++){
-          if (Constructs[objs[i].type].rayIntersection) {
-            s_point_temp = Constructs[objs[i].type].rayIntersection(objs[i], waitingRays[j]);
+          if (constructs[objs[i].type].rayintersection) {
+            s_point_temp = constructs[objs[i].type].rayintersection(objs[i], waitingrays[j]);
             if (s_point_temp){
               s_lensq_temp = Basic_Constructs.length_squared(waitingRays[j].point1, s_point_temp); //The distance to the head of light
               if (s_lensq_temp < s_lensq && s_lensq_temp > minShotLength_squared){
@@ -1688,20 +1719,20 @@ function shootWaitingRays(){
   setTimeout(draw_, 10);
 }
 // error margin variables to check if mouse has moved outside the point,line or whatever!.
-var clickExtent_point = 10;
-var clickExtent_point_construct = 10; 
-var clickExtent_line = 10;
+var clickextent_point = 10;
+var clickextent_point_construct = 10; 
+var clickextent_line = 10;
 
-function mouseOnPoint(mouse, point){
-  return Basic_Constructs.length_squared(mouse, point) < clickExtent_point * clickExtent_point;
+function mouseonpoint(mouse, point){
+  return basic_constructs.length_squared(mouse, point) < clickextent_point * clickextent_point;
 }
 
-function mouseOnPoint_construct(mouse, point){
+function mouseonpoint_construct(mouse, point){
  // console.log(point);
-  return Basic_Constructs.length_squared(mouse, point) < clickExtent_point_construct * clickExtent_point_construct;
+  return basic_constructs.length_squared(mouse, point) < clickextent_point_construct * clickextent_point_construct;
 }
 
-function mouseOnSegment(mouse, segment){
+function mouseonsegment(mouse, segment){
   var d_per = Math.pow((mouse.x - segment.point1.x) * (segment.point1.y - segment.point2.y) + (mouse.y - segment.point1.y) * (segment.point2.x - segment.point1.x), 2) / ((segment.point1.y - segment.point2.y) * (segment.point1.y - segment.point2.y) + (segment.point2.x - segment.point1.x) * (segment.point2.x - segment.point1.x)); //Similar to the mouse perpendicular to the straight line distance
   var d_par = (segment.point2.x - segment.point1.x) * (mouse.x - segment.point1.x) + (segment.point2.y - segment.point1.y) * (mouse.y - segment.point1.y); //Similar to a mouse in a straight line projection on a location
   return d_per < clickExtent_line * clickExtent_line && d_par >= 0 && d_par <= Basic_Constructs.length_of_segment_squared(segment);
