@@ -1,3 +1,8 @@
+/**
+ * @class Basic_Constructs
+ * @brief Basic building blocks of the drawing, like point,ray,line,circle , contains member functions to handle these basic objects and methods related to and needed for them
+*/
+
 var Basic_Constructs = {
 
   point: function(x, y) {return {type: 1, x: x, y: y, exist: true}},
@@ -18,16 +23,36 @@ var Basic_Constructs = {
     }
   },
   //// basic vector-algebra functions
-  
+  /**
+  * @method dot
+  * @brief Calculates the dot product between 2 vectors whose tails aae at origins and heads passed as the points in the argueements
+  * @param {Basic_Constructs.point} point1
+  * @param {Basic_Constructs.point} point2
+  * @return {Number}
+  **/
   dot: function(point1, point2) {
     return point1.x * point2.x + point1.y * point2.y;
   },
-  
+
+  /**
+  * @method cross
+  * @brief Calculates the cross product between 2 vectors whose tails are at origins and heads passed as the points in the argueements
+  * @param {Basic_Constructs.point} point1
+  * @param {Basic_Constructs.point} point2
+  * @return {Number}
+  **/
   cross: function(l1, l2) {
     return point1.x * point2.y - point1.y * point2.x;
   },
   // basic functions for intersections between various connstructs
-  
+  /**
+  * @method intersection
+  * @brief Calculates the intersection point or points(if more than one and they exist),objects can be line and circle 
+  * @param {Basic_Constructs} object1
+  * @param {Basic_Constructs} object2
+  * @return {Basic_Constructs.point}
+  **/
+
   intersection: function(obj1, obj2) {
     // line & line
     if (obj1.type == 2 && obj2.type == 2) {
@@ -42,8 +67,15 @@ var Basic_Constructs = {
       return this.intersection_line_circle(obj2, obj1);
     }
   },
+  // intersection of line with line
+  /**
+  * @method intersection_line_line
+  * @brief Calculates the intersection point of two line objects
+  * @param {Basic_Constructs.line} object1
+  * @param {Basic_Constructs.line} object2
+  * @return {Basic_Constructs.point}
+  **/
 
-	// intersection of line with line
   intersection_line_line: function(l1, l2) {
     var A = l1.point2.x * l1.point1.y - l1.point1.x * l1.point2.y;
     var B = l2.point2.x * l2.point1.y - l2.point1.x * l2.point2.y;
@@ -53,8 +85,15 @@ var Basic_Constructs = {
     var yb = l2.point2.y - l2.point1.y;
     return Basic_Constructs.point((A * xb - B * xa) / (xa * yb - xb * ya), (A * yb - B * ya) / (xa * yb - xb * ya));
   },
+  // intersection of line with circle
+  /**
+  * @method intersection_line_circle
+  * @brief Calculates the intersection point of line and circle
+  * @param {Basic_Constructs.line} object1
+  * @param {Basic_Constructs.circle} object2
+  * @return {Basic_Constructs.point}
+  **/
 
-	// intersection of line with circle
   intersection_line_circle: function(l1, c1) {
     var xa = l1.point2.x - l1.point1.x;
     var ya = l1.point2.y - l1.point1.y;
@@ -81,29 +120,61 @@ var Basic_Constructs = {
   },
 
   // functions to check whether intersection is on ray or not
+   /**
+  * @method intersection_is_on_ray
+  * @brief checks whether the point lies on the ray
+  * @param {Basic_Constructs.line} object1
+  * @param {Basic_Constructs.ray} object2
+  * @return {Bool}
+  **/
   intersection_is_on_ray: function(point1, r1) {
     return (point1.x - r1.point1.x) * (r1.point2.x - r1.point1.x) + (point1.y - r1.point1.y) * (r1.point2.y - r1.point1.y) >= 0;
   },
 
   // functun to check whether intersection is on segment or not
+ /**
+  * @method intersection_is_on_segment
+  * @brief checks whether the point lies on the segment
+  * @param {Basic_Constructs.line} object1
+  * @param {Basic_Constructs.segment} object2
+  * @return {Bool}
+  **/ 
   intersection_is_on_segment: function(point1, s1) {
     return (point1.x - s1.point1.x) * (s1.point2.x - s1.point1.x) + (point1.y - s1.point1.y) * (s1.point2.y - s1.point1.y) >= 0 && (point1.x - s1.point2.x) * (s1.point1.x - s1.point2.x) + (point1.y - s1.point2.y) * (s1.point1.y - s1.point2.y) >= 0;
   },
   // return parallel line
+  /**
+  * @method parallel
+  * @brief returns line paralel to given line passing through the given point
+  * @param {Basic_Constructs.line} object1
+  * @param {Basic_Constructs.point} object2
+  * @return {Basic_Constructs.line}
+  **/ 
+
   parallel: function(l1, point1) {
     var dx = l1.point2.x - l1.point1.x;
     var dy = l1.point2.y - l1.point1.y;
     return Basic_Constructs.line(point1, Basic_Constructs.point(point1.x + dx, point1.y + dy));
   },
-  
-	// return midpoint
+  // return midpoint
+  /**
+  * @method midpoint
+  * @brief returns midpint of the given line or line_segment
+  * @param {Basic_Constructs.line} object1
+  * @return {Basic_Constructs.point}
+  **/ 
   midpoint: function(l1) {
     var nx = (l1.point1.x + l1.point2.x) * 0.5;
     var ny = (l1.point1.y + l1.point2.y) * 0.5;
     return Basic_Constructs.point(nx, ny);
   },
-  
-	// returns perpendicular bisector line
+  // returns perpendicular bisector line
+  /**
+  * @method parallel
+  * @brief returns line perpendicular bisector to the given line
+  * @param {Basic_Constructs.line} object1
+  * @return {Basic_Constructs.line}
+  **/ 
   perpendicular_bisector: function(l1) {
     return Basic_Constructs.line(
         Basic_Constructs.point(
@@ -134,6 +205,10 @@ var Basic_Constructs = {
 };
 
 // class with member functions which implement the drawing of basic functionality of 
+/**
+ * @class CanvasPainter
+ * @brief This class has a drawing member function which basically draws the basic objects that are functinoal objects inn the basic-construct class.
+*/
 var canvasPainter = {
   draw: function(graph, color) {
     if (graph.type == 1) {
@@ -190,9 +265,17 @@ var canvasPainter = {
 
 var Constructs = {};
 //////////////////////////////////////////////////////////////    LINE OBJECT   /////////////////////////////////////////////////////////////////////////////////
-
+// the generic functional obect
 Constructs['lineobj'] = {//basic constuct
-
+// generic event handlers used in various other object as it as.
+/**
+ * @fn c_mousedown
+ * @brief Handles all the possibilities regarding the construction of
+ *          of the lineobj which is an abstraction to many other objects which require a basic line to be drawn when the mouse is clicked and also calls
+ *          the draw function accordingly
+ * @param[in] obj The object that is being constructed currently
+ * @param[in] mouse contains the co-ordinates of the mouse pointer
+ */
 c_mousedown: function(obj, mouse){
   obj.point2 = mouse;
   console.log("calling mouseOnPoint_construct");
@@ -203,6 +286,14 @@ c_mousedown: function(obj, mouse){
   }
 },
 
+/**
+ * @fn c_mousemove
+ * @brief Handles all the possibilities regarding the construction of
+ *          of the lineobj which is an abstraction to many other objects which require a basic line to be drawn when the mouse is clicked and also calls
+ *          the draw function accordingly
+ * @param[in] obj The object that is being constructed currently
+ * @param[in] mouse contains the co-ordinates of the mouse pointer
+ */
 c_mousemove: function(obj, mouse){
   obj.point2 = mouse;
   obj.point1 = constructionPoint;
@@ -211,22 +302,45 @@ c_mousemove: function(obj, mouse){
   }
 },
 
+/**
+ * @fn c_mouseup
+ * @brief Handles all the possibilities regarding the construction of
+ *          of the object when the mouse is lifted after it was clicked
+ * @param[in] obj The object that is being constructed currently
+ * @param[in] mouse contains the co-ordinates of the mouse pointer
+ */
 c_mouseup: function(obj, mouse){
   if (!mouseOnPoint_construct(mouse, obj.point1)){
     isConstructing = false;
   }
 },
 
+/**
+ * @fn rayIntersection
+ * @brief Computes the point wjere the ray passed as an arguement 
+ *          hits the sides of the object, if the point lies on teh object then returns teh point
+ * @param[in] obj the object with which intersectin is being considered
+ * @param[in] ray the ray which is being considered for intersecton
+ */
+
 rayIntersection: function(obj, ray) {
   var rp_temp = Basic_Constructs.intersection_line_line(Basic_Constructs.line(ray.point1, ray.point2), Basic_Constructs.line(obj.point1, obj.point2));   
   if (Basic_Constructs.intersection_is_on_segment(rp_temp, obj) && Basic_Constructs.intersection_is_on_ray(rp_temp, ray)){
-    return rp_temp; //return the point
+    return rp_temp; //return the point if it lies on the segment then only otherwise null will be returned
   }
 }
 };
 ///////////////////////////////////////////////////////////////////// SINGLE RAY oF lIGHT ///////////////////////////////////////////////////////////////////////
+/**
+ * @member Ray
+ * @brief Contains all the necessary functions and parameters for drawing and creating and handling single ray of light
+ */
 
   Constructs['Ray'] = {
+/**
+ * @fn create
+ * @brief Creates the functional object of the Construct,which contains information about its type and necessary boundary points and properties if any.  
+ */
 
   create: function(mouse) {
     return {type: 'Ray', point1: mouse, point2: mouse};
@@ -235,11 +349,25 @@ rayIntersection: function(obj, ray) {
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
 
+/**
+ * @fn draw
+ * @brief Draws the object when it is partially constucted or when its
+ *          mouse is moved and when mousedown event occurs, just draws the support doesnt draws the rays, that is handled by shoot waiting rays function
+ * @param[in] obj The object to be drawn
+ */
+
   draw: function(obj) {
   //var ctx = canvas.getContext('2d');
   ctx.fillStyle = 'rgb(255,255,0)';
   ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 2, 2);
   },
+
+/**
+ * @fn shoot
+ * @brief shhot function for luminous objects treats the rays as a ray functional object of the class Basic_constructs and calculates from where the rays are to b eshot and adds
+ those rays objects to an array of waitingRays. It doesnt draw the rays,it just adds the rays to the array 
+ * @param[in] obj The object from which rays are to be shot
+ */
 
   shoot: function(obj) {
   var ray1 = Basic_Constructs.ray(obj.point1, obj.point2);
@@ -250,8 +378,17 @@ rayIntersection: function(obj, ray) {
   }
 };  
 ///////////////////////////////////////////////////////////////////////  POINT-SOURCE  ////////////////////////////////////////////////////////////////////////////
+/**
+ * @member Beam
+ * @brief Contains all the necessary functions and parameters for drawing and creating and handling Point Source    
+ */
 
 Constructs['Point_Source'] = {
+
+/**
+ * @fn create
+ * @brief Creates the functional object of the Construct,which contains information about its type and necessary boundary points and properties if any.  
+ */
   create: function(mouse) {
     console.log("create in Point_Source");
   return {type: 'Point_Source', x: mouse.x, y: mouse.y, p: 0.5};
@@ -266,11 +403,24 @@ Constructs['Point_Source'] = {
   c_mouseup: function(obj, mouse){
     isConstructing = false;
   },
+/**
+ * @fn draw
+ * @brief Draws the object when it is partially constucted or when its
+ *          mouse is moved and when mousedown event occurs, just draws the support doesnt draws the rays, that is handled by shoot waiting rays function
+ * @param[in] obj The object to be drawn
+ */
 
   draw: function(obj) {
     ctx.fillStyle = 'rgb(255,255,0)'; // yellow point source this just draws the source rays will be drawn later
     ctx.fillRect(obj.x - 2, obj.y - 2, 5, 5);
   },
+
+/**
+ * @fn shoot
+ * @brief shhot function for luminous objects treats the rays as a ray functional object of the class Basic_constructs and calculates from where the rays are to b eshot and adds
+ those rays objects to an array of waitingRays. It doesnt draw the rays,it just adds the rays to the array 
+ * @param[in] obj The object from which rays are to be shot
+ */
 
   shoot: function(obj) {
     var step = Math.PI * 2 / parseInt(rayDensity_light* 500); // get the spacing between rays
@@ -288,8 +438,16 @@ Constructs['Point_Source'] = {
 };
 
 ////////////////////////////////////////////////////////////////////////""" BEAM OF LIGHT"""  ////////////////////////////////////////////////////////////////////
+/**
+ * @member Beam
+ * @brief Contains all the necessary functions and parameters for drawing , creating and handling Beam of light
+ */
 Constructs['Beam'] = {
-
+/**
+ * @fn create
+ * @brief Creates the functional object of the Construct,which contains information about its type and necessary boundary points and properties if any.
+ *    
+ */
   create: function(mouse) {
     return {type: 'Beam', point1: mouse, point2: mouse, p: 0.5};
   },
@@ -297,6 +455,13 @@ Constructs['Beam'] = {
   c_mousedown: Constructs['lineobj'].c_mousedown,
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
+
+/**
+ * @fn draw
+ * @brief Draws the object when it is partially constucted or when its
+ *          mouse is moved and when mousedown event occurs, just draws the support doesnt draws the rays that are handled by shoot waiting rays function
+ * @param[in] obj The object to be drawn
+ */
 
   draw: function(obj) {
     var a_l = Math.atan2(obj.point1.x - obj.point2.x, obj.point1.y - obj.point2.y) - Math.PI / 2;
@@ -316,6 +481,13 @@ Constructs['Beam'] = {
     ctx.lineWidth = 1;
     ctx.lineCap = 'square';
   },
+
+/**
+ * @fn shoot
+ * @brief shhot function for luminous objects treats the rays as a ray functional object of the class Basic_constructs and calculates from where the rays are to b eshot and adds
+ those rays objects to an array of waitingRays. It doesnt draw the rays,it just adds the rays to the array 
+ * @param[in] obj The object from which rays are to be shot
+ */
 
   shoot: function(obj) {
     var n = Basic_Constructs.length_of_segment(obj) * rayDensity_light;
@@ -1033,7 +1205,6 @@ refract: function(ray, rayIndex, s_point, normal, n1){
     }
 
     if (lens.p > 0){
-    
       ray.point2 = Basic_Constructs.intersection_line_line(twoF_line_far, Basic_Constructs.line(mid_point, Basic_Constructs.intersection_line_line(twoF_line_near, ray)));
       ray.point1 = shootPoint;
     }
@@ -1045,24 +1216,17 @@ refract: function(ray, rayIndex, s_point, normal, n1){
   };
 ////////////////////////////////////////////////////////////////////// MIRROR ////////////////////////////////////////////////////////////////////////////////////
   
-
-  /*!
-   * adding mirror object in Constructs
-   * 
-   */
   Constructs['mirror'] = {
 
-  create: function(mouse) {  // return an object of type mirror with proper members
+  create: function(mouse) {
     return {type: 'mirror', point1: mouse, point2: mouse};
   },
   c_mousedown: Constructs['lineobj'].c_mousedown,
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
- // clicked: Constructs['lineobj'].clicked,
- // dragging: Constructs['lineobj'].dragging,
   rayIntersection: Constructs['lineobj'].rayIntersection,
 
-  draw: function(obj) {  // draws the mirror on canvas from point1 to point2
+  draw: function(obj) {
     ctx.strokeStyle = 'rgb(168,168,168)';
     ctx.beginPath();
     ctx.moveTo(obj.point1.x, obj.point1.y);
@@ -1070,12 +1234,12 @@ refract: function(ray, rayIndex, s_point, normal, n1){
     ctx.stroke();
   },
 
-  shot: function(mirror, ray, rayIndex, pointOnMirror) { // redefines the ray after it get reflects from the mirror
+  shot: function(mirror, ray, rayIndex, pointOnMirror) {
     var rx = ray.point1.x - pointOnMirror.x;
     var ry = ray.point1.y - pointOnMirror.y;
     var mx = mirror.point2.x - mirror.point1.x;
     var my = mirror.point2.y - mirror.point1.y;
-    ray.point1 = pointOnMirror; // changed the points to make the reflected ray 
+    ray.point1 = pointOnMirror;
     // JEE trigno! hopefully this is correct will see.
     ray.point2 = Basic_Constructs.point(pointOnMirror.x + rx * (my * my - mx * mx) - 2 * ry * mx * my, pointOnMirror.y + ry * (mx * mx - my * my) - 2 * rx * mx * my);
   }
@@ -1083,81 +1247,78 @@ refract: function(ray, rayIndex, s_point, normal, n1){
 
 ////////////////////////////////////////////////////////////////////  CONVEX CONCAVE MIRRORS //////////////////////////////////////////////////////////////////////
 
-  // as ideal mirror have small aperture it will be draw as straight line approximately 
-  Constructs['idealmirror'] = { // adding the object idealmirror to Constructs
+Constructs['idealmirror'] = {
 
   p_name: 'Focal length', // focal length property
   p_min: -1000,
   p_max: 1000,
   p_step: 1,
 
-  create: function(mouse) { // returns an object of type idealmirror , it has information of the co-ordinates of the ends of the miror
+  create: function(mouse) {
     return {type: 'idealmirror', point1: mouse, point2:mouse, p: 100};
   },
-  // data members which helps draw the mirror while dragging the mouse 
+
   c_mousedown: Constructs['lineobj'].c_mousedown,
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
   rayIntersection: Constructs['lineobj'].rayIntersection,
 
-  // to draw the idealmirror on the canvas 
-  draw: function(obj) { 
-  var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
-  var par_x = (obj.point2.x - obj.point1.x) / len;
-  var par_y = (obj.point2.y - obj.point1.y) / len;
-  var per_x = par_y;
-  var per_y = -par_x;
+  draw: function(obj) {
+    var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
+    var par_x = (obj.point2.x - obj.point1.x) / len;
+    var par_y = (obj.point2.y - obj.point1.y) / len;
+    var per_x = par_y;
+    var per_y = -par_x;
 
-  var arrow_size_per = 5;
-  var arrow_size_par = 5;
-  var center_size = 1;
-  ctx.strokeStyle = 'rgb(256,0,0)';
-  ctx.globalAlpha = 1;
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(obj.point1.x, obj.point1.y);
-  ctx.lineTo(obj.point2.x, obj.point2.y);
-  ctx.stroke();
-  ctx.lineWidth = 1;
-  
-  var center = Basic_Constructs.midpoint(obj);
-  ctx.strokeStyle = 'rgb(255,255,255)';
-  ctx.beginPath();
-  ctx.moveTo(center.x - per_x * center_size, center.y - per_y * center_size);
-  ctx.lineTo(center.x + per_x * center_size, center.y + per_y * center_size);
-  ctx.stroke();
-  ctx.fillStyle = 'rgb(256,0,0)';
+    var arrow_size_per = 5;
+    var arrow_size_par = 5;
+    var center_size = 1;
+    ctx.strokeStyle = 'rgb(256,0,0)';
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(obj.point1.x, obj.point1.y);
+    ctx.lineTo(obj.point2.x, obj.point2.y);
+    ctx.stroke();
+    ctx.lineWidth = 1;
+    
+    var center = Basic_Constructs.midpoint(obj);
+    ctx.strokeStyle = 'rgb(255,255,255)';
+    ctx.beginPath();
+    ctx.moveTo(center.x - per_x * center_size, center.y - per_y * center_size);
+    ctx.lineTo(center.x + per_x * center_size, center.y + per_y * center_size);
+    ctx.stroke();
+    ctx.fillStyle = 'rgb(256,0,0)';
 
-  if (obj.p < 0){ // different cases of concave and convex
-    ctx.beginPath();
-    ctx.moveTo(obj.point1.x - par_x * arrow_size_par, obj.point1.y - par_y * arrow_size_par);
-    ctx.lineTo(obj.point1.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par + per_y * arrow_size_per);
-    ctx.lineTo(obj.point1.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par - per_y * arrow_size_per);
-    ctx.fill();
+    if (obj.p < 0){ // different cases of concave and convex
+      ctx.beginPath();
+      ctx.moveTo(obj.point1.x - par_x * arrow_size_par, obj.point1.y - par_y * arrow_size_par);
+      ctx.lineTo(obj.point1.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par + per_y * arrow_size_per);
+      ctx.lineTo(obj.point1.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y + par_y * arrow_size_par - per_y * arrow_size_per);
+      ctx.fill();
 
-    ctx.beginPath();
-    ctx.moveTo(obj.point2.x + par_x * arrow_size_par, obj.point2.y + par_y * arrow_size_par);
-    ctx.lineTo(obj.point2.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par + per_y * arrow_size_per);
-    ctx.lineTo(obj.point2.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par - per_y * arrow_size_per);
-    ctx.fill();
-  }
-  if (obj.p > 0){
-    ctx.beginPath();
-    ctx.moveTo(obj.point1.x + par_x * arrow_size_par, obj.point1.y + par_y * arrow_size_par);
-    ctx.lineTo(obj.point1.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par + per_y * arrow_size_per);
-    ctx.lineTo(obj.point1.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par - per_y * arrow_size_per);
-    ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(obj.point2.x + par_x * arrow_size_par, obj.point2.y + par_y * arrow_size_par);
+      ctx.lineTo(obj.point2.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par + per_y * arrow_size_per);
+      ctx.lineTo(obj.point2.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y - par_y * arrow_size_par - per_y * arrow_size_per);
+      ctx.fill();
+    }
+    if (obj.p > 0){
+      ctx.beginPath();
+      ctx.moveTo(obj.point1.x + par_x * arrow_size_par, obj.point1.y + par_y * arrow_size_par);
+      ctx.lineTo(obj.point1.x - par_x * arrow_size_par + per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par + per_y * arrow_size_per);
+      ctx.lineTo(obj.point1.x - par_x * arrow_size_par - per_x * arrow_size_per, obj.point1.y - par_y * arrow_size_par - per_y * arrow_size_per);
+      ctx.fill();
 
-    ctx.beginPath();
-    ctx.moveTo(obj.point2.x - par_x * arrow_size_par, obj.point2.y - par_y * arrow_size_par);
-    ctx.lineTo(obj.point2.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par + per_y * arrow_size_per);
-    ctx.lineTo(obj.point2.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par - per_y * arrow_size_per);
-    ctx.fill();
-  }
+      ctx.beginPath();
+      ctx.moveTo(obj.point2.x - par_x * arrow_size_par, obj.point2.y - par_y * arrow_size_par);
+      ctx.lineTo(obj.point2.x + par_x * arrow_size_par + per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par + per_y * arrow_size_per);
+      ctx.lineTo(obj.point2.x + par_x * arrow_size_par - per_x * arrow_size_per, obj.point2.y + par_y * arrow_size_par - per_y * arrow_size_per);
+      ctx.fill();
+    }
 
   },
-  // as concave and convex mirror can be seen as combinaton of a respective lens and plane mirror , so the reflection of a ray 
-  // through it is equivalent to passing it through lens first and then reflecting through mirror
+
   shot: function(obj, ray, rayIndex, shootPoint) {
     Constructs['lens'].shot(obj, ray, rayIndex, Basic_Constructs.point(shootPoint.x, shootPoint.y));
     ray.point1.x = 2 * ray.point1.x - ray.point2.x;
@@ -1165,20 +1326,17 @@ refract: function(ray, rayIndex, s_point, normal, n1){
 
     Constructs['mirror'].shot(obj, ray, rayIndex, shootPoint);
   }
-  };
+};
 
 ///////////////////////////////////////////////////////////////////"""  ARC - MIRROR"""  ////////////////////////////////////////////////////////////////
 
-// creating an object of type arcmirror which is nothing but a circular mirror
-
 Constructs['arcmirror'] = {
-  // returns the object of type arcmirror but only first initialised
+
   create: function(mouse) {
     return {type: 'arcmirror', point1: mouse};
   },
 
   c_mousedown: function(obj, mouse) {
-    //checking for what is this mousedow for , ie for point3 or point2
     if (!obj.point2 && !obj.p3){
       draw();
       obj.point2 = mouse;
@@ -1191,7 +1349,6 @@ Constructs['arcmirror'] = {
       return;
     }
   },
-  // as mouse moves this draws the mirror with that curvature after ensuring whether third point is given or not 
 
   c_mousemove: function(obj, mouse){
     if (!obj.p3 && !mouseOnPoint_construct(mouse, obj.point1)){
@@ -1207,13 +1364,11 @@ Constructs['arcmirror'] = {
     }
   },
 
-// if mouse is up after giving third point , then sets the third point as it is 
   c_mouseup: function(obj, mouse){
     if (obj.point2 && !obj.p3 && !mouseOnPoint_construct(mouse, obj.point1)){
       obj.p3 = mouse;
       return;
     }
-    // if third point has been selected , then stop drawing after the final draw 
     if (obj.p3 && !mouseOnPoint_construct(mouse, obj.point2)){
       obj.p3 = mouse;
       draw();
@@ -1221,13 +1376,11 @@ Constructs['arcmirror'] = {
       return;
     }
   },
-// draw function to draw the arcmirror on the canvas 
+
   draw: function(obj) {
     ctx.fillStyle = 'rgb(255,0,255)';
-    // if point 2 and point 3 both are defined
     if (obj.p3 && obj.point2){
       var center = Basic_Constructs.intersection_line_line(Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point1, obj.p3)), Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point2, obj.p3)));
-      // if center of the circular mirror is at infinity , then it is basically a plane mirror 
       if (!isFinite(center.x) || !isFinite(center.y)){
         //Arc collinear, as a processing line
         ctx.strokeStyle = 'rgb(168,168,168)';
@@ -1240,7 +1393,6 @@ Constructs['arcmirror'] = {
         ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 3, 3);
         ctx.fillRect(obj.point2.x - 2, obj.point2.y - 2, 3, 3);
       }
-      // else it is a circular mirror and the function draws the same using canvas functions
       else{
         var r = Basic_Constructs.length(center, obj.p3);
         var a1 = Math.atan2(obj.point1.y - center.y, obj.point1.x - center.x);
@@ -1256,19 +1408,17 @@ Constructs['arcmirror'] = {
         ctx.fillRect(obj.point2.x - 2, obj.point2.y - 2, 3, 3);
       }
     }
-    // if point3 is not defined and point2 is defined , then set the color of two points to distinguish form the line
     else if (obj.point2){
       ctx.fillStyle = 'rgb(128,128,128)';
       ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 3, 3);
       ctx.fillRect(obj.point2.x - 2, obj.point2.y - 2, 3, 3);
     }
-    // else just indicate the point1 with distinguishable color 
     else{
       ctx.fillStyle = 'rgb(128,128,128)';
       ctx.fillRect(obj.point1.x - 2, obj.point1.y - 2, 3, 3);
     }
   },
-  // it is to intersect the ray through the mirror
+
   rayIntersection: function(obj, ray) {
     if (!obj.p3) {return;}
     var center = Basic_Constructs.intersection_line_line(Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point1, obj.p3)), Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point2, obj.p3)));
@@ -1287,8 +1437,7 @@ Constructs['arcmirror'] = {
       if (rp_exist[2] && ((!rp_exist[1]) || rp_lensq[2] < rp_lensq[1])) {return rp_temp[2];}
     }
   },
-  // reflects the ray after colliding at the mirror  
-  // to accomplish so , checks whether mirror is plane or circular and does accordingaly 
+
   shot: function(obj, ray, rayIndex, rp) {
     var center = Basic_Constructs.intersection_line_line(Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point1, obj.p3)), Basic_Constructs.perpendicular_bisector(Basic_Constructs.line(obj.point2, obj.p3)));
     if (!isFinite(center.x) || !isFinite(center.y)){
@@ -1311,7 +1460,10 @@ Constructs['arcmirror'] = {
 
 Constructs['ruler'] = {
   // function to create a functional object of ruler
-
+ /**
+ * @fn create
+ * @brief Creates the functional object of the Ruler,which contains information about its type and necessary boundary points and properties if any.  
+ */
   create: function(mouse) {
     return {type: 'ruler', point1: mouse, point2: mouse};
   },
@@ -1319,15 +1471,18 @@ Constructs['ruler'] = {
   c_mousedown: Constructs['lineobj'].c_mousedown,
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
-  move: Constructs['lineobj'].move,
-  clicked: Constructs['lineobj'].clicked,
-  dragging: Constructs['lineobj'].dragging,
   // drws ruler 
-  draw: function(obj, aboveLight) {
-  //var ctx = canvas.getcontext('2d');
-    if (abovelight)return;
-    ctx.globalcompositeoperation = 'lighter';
-    var len = math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
+  /**
+ * @fn draw
+ * @brief Draws the object when it is partially constucted or when the mousemoves or when appropriate mouseevents take place         
+ * @param[in] obj The object to be drawn
+ * @detail The draw function handles different cases of drawing according to the angle of the scale so as to keep the numbers in readable upfront view and not inverted view
+ */
+  draw: function(obj,aboveLight) {
+  //var ctx = canvas.getContext('2d');
+    if (aboveLight)return;
+    ctx.globalCompositeOperation = 'lighter';
+    var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
     var par_x = (obj.point2.x - obj.point1.x) / len;
     var par_y = (obj.point2.y - obj.point1.y) / len;
     var per_x = par_y;
@@ -1402,6 +1557,10 @@ Constructs['ruler'] = {
 
 Constructs['protractor'] = {
   // creating functional objects for protracter
+  /**
+ * @fn create
+ * @brief Creates the functional object of the Protractor,which contains information about its type and necessary boundary points and properties if any.  
+ */
   create: function(mouse) {
     return {type: 'protractor', point1: mouse, point2: mouse};
   },
@@ -1409,9 +1568,14 @@ Constructs['protractor'] = {
   c_mousedown:Constructs['lineobj'].c_mousedown,
   c_mousemove: function(obj, mouse, ctrl, shift) {Constructs['lineobj'].c_mousemove(obj, mouse, false, shift)},
   c_mouseup: Constructs['lineobj'].c_mouseup,
-  move: Constructs['lineobj'].move,
   // function todraw thr protracter
-  draw: function(obj, aboveLight) {
+  /**
+ * @fn draw
+ * @brief Draws the object when it is partially constucted or when the mousemoves or when appropriate mouseevents(mouse_down) take place         
+ * @param[in] obj The object to be drawn
+ * @detail The draw function handles different cases of drawing according to the radius of the Protracter so as to keep the numbers in readable scale not too small not too large.
+ */
+  draw: function(obj,aboveLight) {
     if (!aboveLight){
       ctx.globalCompositeOperation = 'lighter';
       var r = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
@@ -1470,7 +1634,7 @@ Constructs['protractor'] = {
 };
 
 
-/////////////////////////////////////////////////////////////////////////////// SHOW-TIME /////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////  SHOW-TIME  ////////////////////////////////////////////////////////////////////////
 
 var canvas;
 var ctx;
@@ -1648,8 +1812,6 @@ function shootWaitingRays(){
   var observed_intersection;
   var rpd;
   var leftRayCount = waitingRays.length; // this is the number of rays to be drwan
-  var leftRayCount = waitingRays.length;
-  var surfaceMerging_objs = [];
 
   while (leftRayCount != 0){
     leftRayCount = 0; //Restart to calculate the amount of remaining light
@@ -1661,14 +1823,15 @@ function shootWaitingRays(){
         //If waitingRays[j] exists
         //Begin to shoot waitingRays[j] (the last light of the waiting area)
         //Determine which object will hit the light after it is shot
-        //the decrease in search of every "intersect with this light objects, looking for" [light] from the intersection of the object and the light [head] recent articles"
-        s_obj = null; //"so far, the object of inspection [the intersection with the light] from the [light of the head] the nearest object
+        //O(nm)
+        //The decrease in search of every "intersect with this light objects, looking for" [light] from the intersection of the object and the light [head] recent articles"
+        s_obj = null; //"So far, the object of inspection [the intersection with the light] from the [light of the head] the nearest object
         s_obj_index = -1;
-        s_point = null;  //the intersection of s_obj and light 
-        s_lensq = infinity; //set the distance between "s_obj and the intersection of light" and "the head of the ray" to infinity (since no object has been checked at all, and now is looking for the minimum) 
+        s_point = null;  //The intersection of s_obj and light 
+        s_lensq = Infinity; //Set the distance between "s_obj and the intersection of light" and "the head of the ray" to infinity (since no object has been checked at all, and now is looking for the minimum) 
         for (var i = 0; i < objs.length; i++){
-          if (constructs[objs[i].type].rayintersection) {
-            s_point_temp = constructs[objs[i].type].rayintersection(objs[i], waitingrays[j]);
+          if (Constructs[objs[i].type].rayIntersection) {
+            s_point_temp = Constructs[objs[i].type].rayIntersection(objs[i], waitingRays[j]);
             if (s_point_temp){
               s_lensq_temp = Basic_Constructs.length_squared(waitingRays[j].point1, s_point_temp); //The distance to the head of light
               if (s_lensq_temp < s_lensq && s_lensq_temp > minShotLength_squared){
@@ -1719,20 +1882,20 @@ function shootWaitingRays(){
   setTimeout(draw_, 10);
 }
 // error margin variables to check if mouse has moved outside the point,line or whatever!.
-var clickextent_point = 10;
-var clickextent_point_construct = 10; 
-var clickextent_line = 10;
+var clickExtent_point = 10;
+var clickExtent_point_construct = 10; 
+var clickExtent_line = 10;
 
-function mouseonpoint(mouse, point){
-  return basic_constructs.length_squared(mouse, point) < clickextent_point * clickextent_point;
+function mouseOnPoint(mouse, point){
+  return Basic_Constructs.length_squared(mouse, point) < clickExtent_point * clickExtent_point;
 }
 
-function mouseonpoint_construct(mouse, point){
+function mouseOnPoint_construct(mouse, point){
  // console.log(point);
-  return basic_constructs.length_squared(mouse, point) < clickextent_point_construct * clickextent_point_construct;
+  return Basic_Constructs.length_squared(mouse, point) < clickExtent_point_construct * clickExtent_point_construct;
 }
 
-function mouseonsegment(mouse, segment){
+function mouseOnSegment(mouse, segment){
   var d_per = Math.pow((mouse.x - segment.point1.x) * (segment.point1.y - segment.point2.y) + (mouse.y - segment.point1.y) * (segment.point2.x - segment.point1.x), 2) / ((segment.point1.y - segment.point2.y) * (segment.point1.y - segment.point2.y) + (segment.point2.x - segment.point1.x) * (segment.point2.x - segment.point1.x)); //Similar to the mouse perpendicular to the straight line distance
   var d_par = (segment.point2.x - segment.point1.x) * (mouse.x - segment.point1.x) + (segment.point2.y - segment.point1.y) * (mouse.y - segment.point1.y); //Similar to a mouse in a straight line projection on a location
   return d_per < clickExtent_line * clickExtent_line && d_par >= 0 && d_par <= Basic_Constructs.length_of_segment_squared(segment);
