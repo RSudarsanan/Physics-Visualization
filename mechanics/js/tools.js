@@ -7,7 +7,8 @@
 		exports["Gui"] = factory(require("matter-js"), require("matter-tools"));
 	else
 		root["MatterTools"] = root["MatterTools"] || {}, root["MatterTools"]["Gui"] = factory(root["Matter"], root["MatterTools"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
+})
+(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -81,6 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Creates a Gui
 	 * @function Gui.create
+	 * @brief takes engine, runner, and instance as parameter and returns the created gui instance
 	 * @param {engine} [engine]
 	 * @param {runner} [runner]
 	 * @param {render} [render]
@@ -91,7 +93,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  dat.GUI.TEXT_OPEN = '▼';
 
 	  var datGui = new dat.GUI({ autoPlace: false });
-
+	  /*
+	   * @class gui 
+	   * @brief the class contains several data members(that defines the properties of the body)
+	   * intialized with default values and methods used to create the side toolbar which allows user to add
+	   * bodies with required properties in the world for simulation 
+	   */
 	  var gui = {
 	    engine: engine,
 	    runner: runner,
@@ -189,23 +196,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var engine = gui.engine,
 	      runner = gui.runner,
 	      datGui = gui.datGui;
-
+	  /*
+	   * @class funcs 
+	   * @brief funcs is an object that stores all the function of the controls as its data members
+	  */
 	  var funcs = {
+	  	/*
+		 * @fn AddRods
+		 * @brief calls the _addRod function to add rods related bodies in the world
+	  	 */
 	  	AddRods: function AddRods() {
 	  		_addRod(gui);
 	  	},
+	  	/*
+		 * @fn AddSpring
+		 * @brief calls the _addSpring function to add springs related bodies in the world
+	  	 */
 	  	AddSpring: function AddSpring() {
 	  		_addSpring(gui);
 	  	},
+	  	/*
+		 * @fn addBody
+		 * @brief calls the _addBody function to add body with their defined 
+		 * properties in the world
+	  	 */
 	    addBody: function addBody() {
 	      _addBody(gui);
 	    },
+	    /*
+		 * @fn pause
+		 * @brief when called changes the static_status to true and modifies the states
+		 * of all the vodies in the world currently ie changes their static status to true 
+	  	 */
 	    pause: function pause(){
 	    	for(var i=4;i<engine.world.bodies.length;i++){
 	    		engine.world.bodies[i].isStatic=true;
 	    	}
 	    	static_status=true;
 	    },
+	    /*
+		 * @fn runs 
+		 * @brief when called runs the system by setting the isStatic data member of every object as false
+	  	 */
 	    run: function run(){
 	    	for(var i=4;i<engine.world.bodies.length;i++){
 	    		engine.world.bodies[i].isStatic=false;
@@ -217,14 +249,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			index=[];
 	    	static_status=false; 
 	    } ,
+	    /*
+		 * @fn _clear
+		 * @brief calls the _clear function to clear the world when called
+	  	 */
 	    clear: function clear() {
 	      _clear(gui);
 	    }	  };
-	  /*var status = datGui.addFolder('Status');
-	  if(engine){
-	  	status.add(gui.render.options, 'run');
-	  }*/
-	  
+	    // adding world status button if engine is already created 
 	  if(engine){
 	  	var status=datGui.addFolder('World Status');
 	  	status.add(funcs, 'pause'); 
@@ -232,32 +264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  	status.open();
 
 	  }
-	  /*var metrics = datGui.addFolder('Metrics');
-
-	  if (runner) {
-	    metrics.add(runner, 'fps').listen();
-	  }
-
-	  if (engine.metrics.extended) {
-	    if (runner) {
-	      metrics.add(runner, 'delta').listen();
-	      metrics.add(runner, 'correction').listen();
-	    }
-
-	    if (engine) {
-	      metrics.add(engine.metrics, 'bodies').listen();
-	      metrics.add(engine.metrics, 'collisions').listen();
-	      metrics.add(engine.metrics, 'pairs').listen();
-	      metrics.add(engine.metrics, 'broadEff').listen();
-	      metrics.add(engine.metrics, 'midEff').listen();
-	      metrics.add(engine.metrics, 'narrowEff').listen();
-	      metrics.add(engine.metrics, 'narrowReuse').listen();
-	    }
-	    metrics.close();
-	  } else {
-	    metrics.open();
-	  }*/
-
+	  // if engine is created , it adds addBody section on the toolbar
 	  if (engine) {
 	    var controls = datGui.addFolder('Add Body');
 	    //controls.add(gui, 'amount', 1, 5).step(1);
@@ -302,8 +309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    pointB.open();
 	    rods.add(gui.rod, 'BodyA', -1, 10).step(1);
 	    rods.add(gui.rod, 'BodyB', -1, 10).step(1);
-//	    springs.add(gui, 'damping', 0, 1).step(0.001);
-//		springs.add(gui, 'stiffness', 0.001, 1).step(0.001);
+
 		rods.add(funcs, 'AddRods');
 
 	    var worldGui = datGui.addFolder('World');
@@ -322,59 +328,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    gravity.add(engine.world.gravity, 'y', -1, 1).step(0.01);
 	    gravity.open();
 
-	   /* var physics = datGui.addFolder('Engine');
-	    physics.add(engine, 'enableSleeping');
-
-	    physics.add(engine.timing, 'timeScale', 0, 1.2).step(0.05).listen();
-	    physics.add(engine, 'velocityIterations', 1, 10).step(1);
-	    physics.add(engine, 'positionIterations', 1, 10).step(1);
-	    physics.add(engine, 'constraintIterations', 1, 10).step(1);
-
-	    if (runner) {
-	      physics.add(runner, 'enabled');
-	    }
-
-	    physics.open();*/
 	  }
 
 	  if (gui.render) {
 	    var render = datGui.addFolder('Render');
-
-	    /*render.add(gui.render.options, 'wireframes').onFinishChange(function (value) {
-	      if (!value) {
-	        angleIndicatorWidget.setValue(false);
-	        axesWidget.setValue(false);
-	      }
-	    });*/
-
-	   // render.add(gui.render.options, 'showDebug');
 	    render.add(gui.render.options, 'showPositions');
-	   // render.add(gui.render.options, 'showBroadphase');
-	   // render.add(gui.render.options, 'showBounds');
 	    render.add(gui.render.options, 'showVelocity');
 	    render.add(gui.render.options, 'showCollisions');
-	  //  render.add(gui.render.options, 'showSeparations');
 	    var axesWidget = render.add(gui.render.options, 'showAxes');
 	    var angleIndicatorWidget = render.add(gui.render.options, 'showAngleIndicator');
-	  //  render.add(gui.render.options, 'showSleeping');
 	    render.add(gui.render.options, 'showIds');
-	  //  render.add(gui.render.options, 'showVertexNumbers');
-	   // render.add(gui.render.options, 'showConvexHulls');
 	    render.add(gui.render.options, 'showInternalEdges');
-	   // render.add(gui.render.options, 'enabled');
 	    render.open();
 	  }
-
 	  document.body.appendChild(gui.datGui.domElement);
 	};
+	/*
+	 * @fn _addRod 
+	 * @param gui 
+	 * @brief takes the gui as input and adds the rod related objects with defined properties in the world 
+	 */
 
 	var _addRod = function _addRod(gui) {
 		var engine = gui.engine;
 		var options = {
 			pointA: {x:gui.rod.Ax, y:gui.rod.Ay},
 			pointB: {x:gui.rod.Bx, y:gui.rod.By},
-//			stiffness: gui.stiffness,
-//			damping: gui.damping,
 			render: { strokestyle: '#ff00ff'}
 		}
 		if(gui.rod.BodyA != -1)
@@ -390,7 +369,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			World.add(engine.world, [rod]);	
 		
 	}
-
+	/*
+	 * @fn _addSpring
+	 * @param gui 
+	 * @brief takes the gui as input and adds the spring related objects with defined properties in the world 
+	 */
 	var _addSpring = function _addSpring(gui) {
 		var engine = gui.engine;
 		var options = {
@@ -414,6 +397,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 		
 	}
+	/* @fn _addBody 
+	 * @param gui
+	 * @brief takes gui as parameter, gui contains the properties of the body to be added,
+	 * it creates the body with required properties and adds to the world 
+	*/
 
 	var _addBody = function _addBody(gui) {
 	  var engine = gui.engine;
@@ -443,10 +431,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   		index.push(engine.world.bodies.length-1);
 	   		force.push(options.force);  
 	   	}
-	    //engine.world.bodies[engine.world.bodies.length-1].force=options.force;
+	    
 	  }
 	};
-
+	/*
+	 * @fn _clear
+	 * @param gui
+	 * @brief the function takes gui as input and clears all the nonstatic objects in the world
+	*/
 	var _clear = function _clear(gui) {
 	  var engine = gui.engine,
 	      constraints = Composite.allConstraints(engine.world),
@@ -455,8 +447,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // find mouse constraints
 	  for (var i = 0; i < constraints.length; i += 1) {
 	    var constraint = constraints[i];
-
-	    // TODO: need a better way than this
 	    if (constraint.label === 'Mouse Constraint') {
 	      mouseConstraint = constraint;
 	      break;

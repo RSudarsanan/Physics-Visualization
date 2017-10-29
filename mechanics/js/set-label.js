@@ -1,4 +1,8 @@
 
+/*
+ * @brief this is an auto run function at the time of execution, it 
+ * sets the labels on the canvas for proper navigation on the page
+*/
 (function() {
     var sourceLinkRoot = 'examples';
 
