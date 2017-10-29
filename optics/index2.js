@@ -1215,7 +1215,12 @@ refract: function(ray, rayIndex, s_point, normal, n1){
   }
   };
 ////////////////////////////////////////////////////////////////////// MIRROR ////////////////////////////////////////////////////////////////////////////////////
-  
+  /**
+ * @member mirror
+ * @brief Contains all the necessary functions and parameters for drawing
+ *      mirror objects and for governing reflaction of rays through it
+ */
+
   Constructs['mirror'] = {
 
   create: function(mouse) {
@@ -1246,6 +1251,11 @@ refract: function(ray, rayIndex, s_point, normal, n1){
   };
 
 ////////////////////////////////////////////////////////////////////  CONVEX CONCAVE MIRRORS //////////////////////////////////////////////////////////////////////
+/**
+ * @member idealmirror
+ * @brief Contains all the necessary functions and parameters for drawing
+ *      convex and concave mirror objects and for governing reflection of rays through it
+ */
 
 Constructs['idealmirror'] = {
 
@@ -1262,6 +1272,7 @@ Constructs['idealmirror'] = {
   c_mousemove: Constructs['lineobj'].c_mousemove,
   c_mouseup: Constructs['lineobj'].c_mouseup,
   rayIntersection: Constructs['lineobj'].rayIntersection,
+  
 
   draw: function(obj) {
     var len = Math.sqrt((obj.point2.x - obj.point1.x) * (obj.point2.x - obj.point1.x) + (obj.point2.y - obj.point1.y) * (obj.point2.y - obj.point1.y));
@@ -1329,6 +1340,12 @@ Constructs['idealmirror'] = {
 };
 
 ///////////////////////////////////////////////////////////////////"""  ARC - MIRROR"""  ////////////////////////////////////////////////////////////////
+
+/**
+ * @member arcmirror
+ * @brief Contains all the necessary functions and parameters for drawing
+ *     circular mirror objects and for governing reflection of rays through it
+ */
 
 Constructs['arcmirror'] = {
 
