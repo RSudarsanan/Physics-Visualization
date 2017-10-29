@@ -10,7 +10,6 @@ Open terminal and type the following command
 ``` 
 git clone https://github.com/RSudarsanan/Physics-Visualization.git
 ```
-
 ### Running in the browser
 
 After the repository is cloned , go to homepage in the repository and open index.html in the browser, the homepage of the project will be displayed offering two portions - Optics and Mechanics with the links to go on the respective pages
@@ -81,6 +80,7 @@ After selecting this option the user has toclick at the center point where the p
 
 On clicking this button the all the objects added in the system gets removed and a fresh workspace gets displayed.
 
+
 ## Mechanics Part 
 
 Mechanics interface opens with a canvas representing the world ( environment ) and side toolbar with several tools in forms of buttons embedded in it.
@@ -116,7 +116,6 @@ It is dropdown menu which contains several options to define the properties of t
 ```
 addBody - after defining the characteristics of the body above , this button can be used to finally add the body to the world.
 ```
-
 ####  Springs
 
 It shows the dropdown menu which contains options to add bodies with springs attached to them 
@@ -131,7 +130,6 @@ It shows the dropdown menu which contains options to add bodies with springs att
 ```
 addSpring - finally this button adds the spring into the world with above defined properties
 ```
-
 #### Rods
 
 It has the dropdown menu containing the options to add a r od between two objects or between a fixed point in the world and any object
@@ -144,7 +142,6 @@ It has the dropdown menu containing the options to add a r od between two object
 ```
 AddRods - finally this button adds the rod to the world with the above defined properties
 ```
-
 #### World
 
 It has the button to clear or reset the world
