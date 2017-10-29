@@ -6,7 +6,6 @@ This project contains simulations for different optical and the mechanical pheno
 First clone the reppository, for this follow the guidelines -
 
 ### Cloning the Repository
-
 Open terminal and type the following command
 ``` 
 git clone https://github.com/RSudarsanan/Physics-Visualization.git
@@ -20,7 +19,67 @@ After the repository is cloned , go to homepage in the repository and open index
 
 ## Optics Part
 
+The optics page opens with an empty workspace with toolbar having buttons for adding various components in the workspace and to control their properties. the toolbar has buttons for adding light sources, mirrors, refractors and measurement tools.
 
+### Light Sources
+
+It is a dropdown menu with the buttons for single ray, parallel beam and point source
+
+#### Single Ray
+
+Allows to draw a single ray. After clicking this button the user has to click at the starting point of the ray and then on another point through which the ray has to pass. Once the mouse is lifted the ray will get fixed.
+
+#### Parallel Beam
+
+Allows to draw a parallel beam whose length of spread, direction and the starting place can be marked. After selecting this option the user has to click at the point from where the beam starts to emanate rays and then as the user moves the mouse the beam is displayed and ppropriately the user has to click at another point to specify the other end of the line from which the rays emanate. The slider for the ray density can be used to modify the beam density.
+
+#### Point Source
+
+Allows to insert a point source of light in the system. After selecting this option the user has to click at the point where the user wants to add the point source on the screen and then the point source is displayed. The user can control the density of the rays originating from the point by adjusting the slider for the ray density
+
+### Refractors
+
+It is a dropdown menu with the buttons to add plane and curved mirrors to the system
+
+#### Plane Mirror
+
+For adding a plane mirror to the system the user after selecting this option has to click at one of the end points of the mirror and then at the other end point of the mirror and then the mirror gets fixed at the specified place.
+
+#### Circular Mirror
+
+For adding a mirror which is in the shape of an arc. The user has to click at one of the end points of the arc of the required mirror and then at the other end of the arc and then finally click at any point on the arc. Then an arc passing through these three points with the first two as the end-points gets fixed in the work space
+
+#### Convex/Concave Mirror
+
+For adding the concave mirror with very small curvature and apperture on which the paraxial ray approximation can be made and the mirror formua can be used to desrcibe its properties. After selecting this option the user has to click at the starting and the end points of this mirror and the focal length can be adjusted from the slider which appears below the toolbar. By the changing the focal length the mirror can be to behave as concave or convex. The user can also directly type the focal lenght in the box below the slider
+
+### Refractors
+
+For adding objects which allow refraction of light rays through them. It is a dropdown menu with buttons for adding an object with a particular shape and refractive index or a lens
+
+#### Polygin Refractor
+
+Allows to add a closed curve which then behaves as an object with the refractive index as specified. After selecting this option the user has to click at the verices of the object in a cycle manner if the object is a polygon. For drawing curved edges, the user has to click at the starting point of the arc and then at any point on the arc and then without lifting the mouse the user has to drag till the end point of the arc and after lifting the mouse at the end-point of the arc, the curved edge gets fixed in the workspace. The user has to click at the starting after he has clicked at all the other vertices for completing the closed curve. the refractive index of the object can be changed by using the slider below the toolbar
+
+#### Ideal lens
+
+Allows to add ideal lens with the required focal length in the system. After selecting this option, the user has to click at the starting and the end-points and then can adjyst its focal length to make it work as a convex or concave lens
+
+### Measurement
+
+It allows the user to add measuring tools to the system like a ruler or a protractor
+
+#### Ruler
+
+The user has to click at the starting and the endpoints of the ruler and then a ruler gets added to the system
+
+#### Protractor
+
+After selecting this option the user has toclick at the center point where the protrctors' center has to placed and then at the circumference where the 0 degrees marking has to placed. Then the protractor gets added to the system
+
+### Reset
+
+On clicking this button the all the objects added in the system gets removed and a fresh workspace gets displayed.
 
 ## Mechanics Part 
 
