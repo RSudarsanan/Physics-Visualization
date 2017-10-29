@@ -170,7 +170,7 @@ var Basic_Constructs = {
   },
   // returns perpendicular bisector line
   /**
-  * @method parallel
+  * @method perpendicular_bisector
   * @brief returns line perpendicular bisector to the given line
   * @param {Basic_Constructs.line} object1
   * @return {Basic_Constructs.line}
